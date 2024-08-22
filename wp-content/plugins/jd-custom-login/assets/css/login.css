@@ -1,0 +1,80 @@
+body {
+    background-image: url('http://www.coca.ir/wp-content/uploads/2017/02/FULL-HD-NATURE-PHOTOS-1.jpg');
+    background-size: cover;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.login h1 a{
+    background-image: url('https://www.vectorlogo.zone/logos/java/java-icon.svg');
+    height: 90px;
+}
+
+.language-switcher{
+    display: none;
+}
+
+#login{
+    margin: initial;
+    background: #ffffff42;
+    padding: 55px;
+    backdrop-filter: blur(4px);
+}
+
+p#backtoblog a {
+    color: #000 !important;
+}
+
+p#nav a {
+    color: #000 !important;
+}
+
+.login form{
+    border-radius: 10px;
+    border: none;
+    box-shadow: none;
+}
+
+p.message {
+    border-radius: 10px;
+}
+
+p.forgetmenot input{
+    display: none;
+}
+
+p.forgetmenot label{
+    position: relative;
+    padding: 34px;
+}
+
+
+p.forgetmenot label:before{
+    background: white;
+    content: "";
+    width: 30px;
+    height: 16px;
+    border-radius: 60px;
+    position: absolute;
+    right: 0;
+    border: 1px solid #dadada;
+    top: 3px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 16);
+}
+
+p.forgetmenot label:after{
+    content: "";
+    width: 12px;
+    height: 12px;
+    background: #af0707;
+    border-radius: 50%;
+    position: absolute;
+    right: 3px;
+    top: 5px;
+    transition: .3s ease-in-out;
+}
+
+p.forgetmenot input:checked + label:after{
+    right: 15px;
+    background: #0eec97;
+}
