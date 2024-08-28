@@ -9,7 +9,7 @@ define('JDME_VIEW', plugin_dir_path(__FILE__).'view/');
 define('JDME_IMAGE', plugin_dir_path(__FILE__).'assets/images/');
 
 if(is_admin()){
-    include(JDME_ADMIN.'menuse.php');
+    include(JDME_ADMIN.'menus.php');
 }
 
 register_activation_hook(__FILE__,'jdme_install');
