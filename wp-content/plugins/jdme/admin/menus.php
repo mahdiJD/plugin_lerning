@@ -32,16 +32,16 @@ function jdme_form_submit(){
     global $pagenow;
     // die($pagenow);
     if($pagenow == 'admin.php' && isset($_GET['page']) && $_GET['page']=='jdme_employees_create'){
-        if (isset($_POST['save_employee'])) {
+        if ( $_POST['save_employee' ] == 1 ) {
             // print_r($_POST);exit;
             $data = [
                 'first_name' => sanitize_text_field($_POST['first_name']),
-                'lastـname'  => sanitize_text_field($_POST['lastـname']),
+                'last_name'  => sanitize_text_field($_POST['lastـname']),
                 'birthdate'  => sanitize_text_field($_POST['birthdate']),
                 'avatar'     => esc_url_raw($_POST['avatar']),
-                'mission'    => absint($_POST['mission']),
                 'weight'     => floatval($_POST['weight']),
-                'created_at' => esc_url_raw($_POST['mysql']),
+                'mission'    => absint($_POST['mission']),
+                'created_at' => current_time('mysql')
             ];
             global $wpdb;
             $table_name = $wpdb->prefix .'jdme_employees';
@@ -56,10 +56,13 @@ function jdme_form_submit(){
             if($inserted){
                 $employee_id = $wpdb->insert_id;
                 wp_redirect(
-                    admin_url(''), 
+                    admin_url('admin.php?page=jdme_employees_create&employee_status=inserted&employee_id='.$employee_id), 
                 );
             }else{
-                 
+                wp_redirect(
+                    admin_url('admin.php?page=jdme_employees_create&employee_status=inserted_erro'), 
+                );
+                exit;
             }
         }
     }

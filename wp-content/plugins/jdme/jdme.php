@@ -5,7 +5,7 @@
 defined('ABSPATH') || exit;
 
 define('JDME_ADMIN', plugin_dir_path(__FILE__).'admin/');
-define('JDME_VIEW', plugin_dir_path(__FILE__).'view/');
+define('JDME_VIEW', plugin_dir_path(__FILE__).'views/');
 define('JDME_IMAGE', plugin_dir_path(__FILE__).'assets/images/');
 
 if(is_admin()){

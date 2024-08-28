@@ -57,7 +57,7 @@ global $custom_jd_notice;
                 <label for="birthdate">تاریخ تولد</label>
             </th>
             <td>
-                <input type="text" name="birthdate" id="birthdate"></input>
+                <input type="date" name="birthdate" id="birthdate"></input>
             </td>
         </tr>
 
@@ -73,6 +73,6 @@ global $custom_jd_notice;
 
     </table>
     <p class="submit">
-        <button class="button button-primary" name="seve_employee">save</button>
+        <button class="button button-primary" name="save_employee" value="1">save</button>
     </p>
 </form>
