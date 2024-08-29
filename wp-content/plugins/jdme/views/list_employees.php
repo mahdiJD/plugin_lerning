@@ -39,6 +39,7 @@ $page_links = paginate_links([
             <th>وزن</th>
             <th>تاریح نولد</th>
             <th>تاریخ ثبت</th>
+            <th>عملیات</th>
         </thead>
         <tbody>
         <?php if( $employees) :?>
@@ -54,6 +55,11 @@ $page_links = paginate_links([
                     <td><?php echo $employee->weight;?>KG</td>
                     <td><?php echo $employee->birthdate;?></td>
                     <td><?php echo $employee->created_at;?></td>
+                    <td>
+                        <a href='<?php echo admin_url("admin.php?page=jdme_employees&action=delete_employee&id=$employee->ID") ?>'>
+                            <span class="dashicons dashicons-trash"></span>
+                        </a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         <?php else: ?>
@@ -71,6 +77,7 @@ $page_links = paginate_links([
             <th>وزن</th>
             <th>تاریح نولد</th>
             <th>تاریخ ثبت</th>
+            <th>عملیات</th>
         </tfoot>
     </table>
     <div class="pagination">

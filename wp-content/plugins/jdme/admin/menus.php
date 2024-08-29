@@ -5,13 +5,15 @@ add_action('admin_menu','jdme_add_menuse');
 
 function jdme_add_menuse(){
 
-    add_menu_page(
+    $list_hook_suffix = add_menu_page(
         'کارمندان',
         'کارمندان',
         'manage_options',
         'jdme_employees',
         'show_employees'
     );
+
+    add_action('load-'. $list_hook_suffix , 'jdme_proccess_deletion' );
 
     add_submenu_page(
         'jdme_employees',
@@ -21,6 +23,25 @@ function jdme_add_menuse(){
         'jdme_employees_create',
         'jdme_render_form'
     );
+}
+
+function jdme_proccess_deletion(){
+    if( isset($_GET['action']) && $_GET['action'] == 'delete_employee' && isset($_GET['id']) ){
+        $employee_id = absint($_GET['id']);
+        global $wpdb;
+        $table_name = $wpdb->prefix .'jdme_employees';
+        $deleted = $wpdb->delete(
+            $table_name,
+            [
+                'ID' => $employee_id
+            ]
+        );
+        if($deleted){
+            wp_redirect(
+                admin_url('admin.php?page=jdme_employees&employee_status=deleted')
+            );
+        }else wp_redirect(admin_url('admin.php?page=jdme_employees&employee_status=deleted_error'));
+    }
 }
 
 function jdme_render_form(){
@@ -144,6 +165,12 @@ function jdme_notices(){
         elseif($status == 'edited_error'){
             $message = 'ویرایش با خطا مواجه شد';
             $type    = 'error'; 
+        }elseif($status == 'deleted_error'){
+            $message = 'حذف با خطا مواجه شد';
+            $type    = 'error'; 
+        }elseif($status == 'deleted'){
+            $message = 'حذف شد';
+            $type    = 'success'; 
         }
     }
     if ($type && $message) {
