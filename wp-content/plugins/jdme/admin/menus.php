@@ -10,9 +10,7 @@ function jdme_add_menuse(){
         'کارمندان',
         'manage_options',
         'jdme_employees',
-        function(){
-            include(JDME_VIEW.'list_employees.php');
-        }
+        'show_employees'
     );
 
     add_submenu_page(
@@ -25,6 +23,22 @@ function jdme_add_menuse(){
             include(JDME_VIEW.'form_employees.php');
         }
     );
+}
+function show_employees(){
+    global $wpdb;
+    $table_name = $wpdb->prefix .'jdme_employees';
+    $page = isset($_GET['pagenum'] ) ? absint($_GET['pagenum'] ) : 1;
+    $per_page =2 ;
+    $limit = $per_page;
+    $offset = ($page - 1) * $per_page;
+    $employees = $wpdb->get_results(
+        "SELECT SQL_CALC_FOUND_ROWS * FROM $table_name ORDER BY created_at DESC LIMIT $limit OFFSET $offset"
+    );
+
+    $found_rows = $wpdb->get_var( "SELECT FOUND_ROWS()" );
+    $total_pages = ceil( $found_rows / $per_page );
+    
+    include(JDME_VIEW.'list_employees.php');
 }
 
 add_action('admin_init','jdme_form_submit');
@@ -60,7 +74,7 @@ function jdme_form_submit(){
                 );
             }else{
                 wp_redirect(
-                    admin_url('admin.php?page=jdme_employees_create&employee_status=inserted_erro'), 
+                    admin_url('admin.php?page=jdme_employees_create&employee_status=inserted_error'), 
                 );
                 exit;
             }
