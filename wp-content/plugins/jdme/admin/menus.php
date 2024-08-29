@@ -19,11 +19,26 @@ function jdme_add_menuse(){
         'ایجاد کارمندان',
         'manage_options',
         'jdme_employees_create',
-        function(){
-            include(JDME_VIEW.'form_employees.php');
-        }
+        'jdme_render_form'
     );
 }
+
+function jdme_render_form(){
+
+    global $wpdb;
+    $table_name = $wpdb->prefix .'jdme_employees';
+    $employees = false;
+    if( isset($_GET['employee_id'] ) ){
+        $employee_id = absint($_GET['employee_id']);
+        if($employee_id){
+            $employees = $wpdb->get_row(
+                "SELECT * FROM $table_name WHERE ID = $employee_id"
+            );
+        }
+    }
+    include(JDME_VIEW.'form_employees.php');
+}
+
 function show_employees(){
     global $wpdb;
     $table_name = $wpdb->prefix .'jdme_employees';
@@ -37,7 +52,7 @@ function show_employees(){
 
     $found_rows = $wpdb->get_var( "SELECT FOUND_ROWS()" );
     $total_pages = ceil( $found_rows / $per_page );
-    
+
     include(JDME_VIEW.'list_employees.php');
 }
 
@@ -48,6 +63,8 @@ function jdme_form_submit(){
     if($pagenow == 'admin.php' && isset($_GET['page']) && $_GET['page']=='jdme_employees_create'){
         if ( $_POST['save_employee' ] == 1 ) {
             // print_r($_POST);exit;
+
+            $employee_id = $_POST['ID'];
             $data = [
                 'first_name' => sanitize_text_field($_POST['first_name']),
                 'last_name'  => sanitize_text_field($_POST['lastـname']),
@@ -55,10 +72,35 @@ function jdme_form_submit(){
                 'avatar'     => esc_url_raw($_POST['avatar']),
                 'weight'     => floatval($_POST['weight']),
                 'mission'    => absint($_POST['mission']),
-                'created_at' => current_time('mysql')
             ];
+
             global $wpdb;
             $table_name = $wpdb->prefix .'jdme_employees';
+
+            if($employee_id){
+                $update_row = $wpdb->update(
+                    $table_name,
+                    $data,
+                    [ 'ID' => $employee_id ],
+                    [
+                        '%s','%s','%s','%s','%d','%f'
+                    ],
+                    ['%d']
+                );
+
+                if( $update_row === false){
+                    wp_redirect(
+                        admin_url('admin.php?page=jdme_employees_create&employee_status=edited_error&employee_id='.$employee_id), 
+                    );
+                }else{
+                    wp_redirect(
+                        admin_url('admin.php?page=jdme_employees_create&employee_status=edited&employee_id='.$employee_id), 
+                    );
+                }
+
+            }
+            $data['created_at'] = current_time('mysql');
+            
             $inserted = $wpdb->insert(
                 $table_name,
                 $data,
@@ -94,6 +136,13 @@ function jdme_notices(){
             $type    = 'success'; 
         }elseif($status == 'inserted_error'){
             $message = 'ثبت با خطا مواجه شد';
+            $type    = 'error'; 
+        }elseif($status == 'edited'){
+            $message = 'کارمند ویرایش شد';
+            $type    = 'success'; 
+        }
+        elseif($status == 'edited_error'){
+            $message = 'ویرایش با خطا مواجه شد';
             $type    = 'error'; 
         }
     }

@@ -47,7 +47,7 @@ $page_links = paginate_links([
                     <td><?php echo $employee->ID;?></td>
                     <td>
                         <a href="<?php echo admin_url('admin.php?page=jdme_employees_create&employee_id='.$employee->ID);?>">
-                        <?php echo $employee->first_name.' '.$employee->first_name;?>
+                        <?php echo $employee->first_name.' '.$employee->last_name;?>
                         </a>
                     </td>
                     <td><?php echo $employee->mission;?></td>

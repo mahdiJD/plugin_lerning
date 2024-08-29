@@ -2,8 +2,25 @@
 
 defined('ABSPATH') || exit;
 global $title;
-
 global $custom_jd_notice;
+
+$ID = 0 ;
+$first_name ='';
+$last_name ='';
+$mission ='';
+$weight ='';
+$birthdate ='';
+$avatar ='';
+
+if($employees){
+    $ID = $employees->ID;
+    $first_name = $employees->first_name;
+    $last_name = $employees->last_name;
+    $mission = $employees->mission;
+    $weight = $employees->weight;
+    $birthdate = $employees->birthdate;
+    $avatar = $employees->avatar;
+}
 ?>
 <h1><?php echo $title ;?></h1>
 <form method="post" action="" >
@@ -21,7 +38,7 @@ global $custom_jd_notice;
                 <label for="first_name">نام</label>
             </th>
             <td>
-                <input type="text" name="first_name" id="first_name" ></input>
+                <input type="text" name="first_name" id="first_name"  value="<?php echo esc_attr($employees->first_name); ?>"></input>
             </td>
         </tr>
 
@@ -30,7 +47,7 @@ global $custom_jd_notice;
                 <label for="lastـname">نام خانوادگی</label>
             </th>
             <td>
-                <input type="text" name="lastـname" id="lastـname"></input>
+                <input type="text" name="lastـname" id="lastـname" value="<?php echo esc_attr($employees->last_name); ?>"></input>
             </td>
         </tr>
 
@@ -39,7 +56,7 @@ global $custom_jd_notice;
                 <label for="mission">تعداد ماموریت</label>
             </th>
             <td>
-                <input type="number" name="mission" id="mission"></input>
+                <input type="number" name="mission" id="mission" value="<?php echo esc_attr($employees->mission); ?>"></input>
             </td>
         </tr>
 
@@ -48,7 +65,7 @@ global $custom_jd_notice;
                 <label for="weight">وزن</label>
             </th>
             <td>
-                <input type="number" name="weight" step="0.1" id="weight"></input>
+                <input type="number" name="weight" step="0.1" id="weight" value="<?php echo esc_attr($employees->weight); ?>"></input>
             </td>
         </tr>
 
@@ -57,7 +74,7 @@ global $custom_jd_notice;
                 <label for="birthdate">تاریخ تولد</label>
             </th>
             <td>
-                <input type="date" name="birthdate" id="birthdate"></input>
+                <input type="date" name="birthdate" id="birthdate" value="<?php echo esc_attr($employees->birthdate); ?>"></input>
             </td>
         </tr>
 
@@ -66,13 +83,14 @@ global $custom_jd_notice;
                 <label for="avatar">تصویر کارمند</label>
             </th>
             <td>
-                <input type="text" name="avatar" id="avatar"></input>
+                <input type="text" name="avatar" id="avatar" value="<?php echo esc_attr($employees->avatar); ?>"></input>
                 <button type="button" class="button button-secondary" id="employee_avatr_select">انتخواب تصویر کارمند</button>
             </td>
         </tr>
 
     </table>
     <p class="submit">
-        <button class="button button-primary" name="save_employee" value="1">save</button>
+        <input type="hidden" name="ID"  value="<?php echo esc_attr($employees->ID); ?>">
+        <button class="button button-primary" name="save_employee" value="1"><?php echo $employees ? 'ویرایش' : 'ثبت' ?></button>
     </p>
 </form>
