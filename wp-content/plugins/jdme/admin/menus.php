@@ -61,6 +61,12 @@ function jdme_render_form(){
 }
 
 function show_employees(){
+    require(JDME_ADMIN . 'Employee_List_Table.php');
+    $employeeListTable = new Employee_List_Table();
+    $employeeListTable->prepare_items();
+    $employeeListTable->display();
+    return;
+
     global $wpdb;
     $table_name = $wpdb->prefix .'jdme_employees';
     $page = isset($_GET['pagenum'] ) ? absint($_GET['pagenum'] ) : 1;

@@ -8,6 +8,9 @@ define('JDME_ADMIN', plugin_dir_path(__FILE__).'admin/');
 define('JDME_VIEW', plugin_dir_path(__FILE__).'views/');
 define('JDME_IMAGE', plugin_dir_path(__FILE__).'assets/images/');
 
+global $wpdb;
+$wpdb->jdme_employyees = $wpdb->prefix . 'jdme_employees';
+
 if(is_admin()){
     include(JDME_ADMIN.'menus.php');
 }
