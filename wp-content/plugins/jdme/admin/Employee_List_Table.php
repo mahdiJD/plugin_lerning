@@ -31,7 +31,14 @@ class Employee_List_Table extends WP_List_Table{
     }
 
     public function column_name($item){
-        return $item['first_name'];
+
+        $actions = [
+            'edit'   => '<a href="' . admin_url('admin.php?page=jdme_employees_create&employee_status=edited&employee_id='.$item['ID']) .'"> ویرایش </a>',
+            'delete' => '<a href="' . admin_url('admin.php?page=jdme_employees&action=delete_employee&id='.$item['ID']) .'"> حذف </a>',
+
+        ];
+
+        return $item['first_name'] . $this->row_actions($actions);
     }
 
     public function column_family($item){
@@ -48,6 +55,14 @@ class Employee_List_Table extends WP_List_Table{
         }
     }
 
+    public function get_sortable_columns(){
+        return[
+            'weight' => ['weight','desc'],
+            'mission' => ['mission', true ],
+            'date' => ['date','asc'],
+        ];
+    }
+
     public function prepare_items()
     {
         global $wpdb;
@@ -56,11 +71,21 @@ class Employee_List_Table extends WP_List_Table{
         $current_page = $this->get_pagenum();
         $offset = ( $current_page -1 ) * $per_page;
 
+        $orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : false ;
+        $order = isset( $_GET['order'] ) ? $_GET['order'] : false ;
+        $orderClause = "ORDER BY created_at ";
+        if($orderby == 'date'){
+            $orderby = "created_at";
+        }
+        if($orderby && $order){
+            $orderClause = "ORDER BY $orderby $order ";
+        }
+
         $results = $wpdb->get_results(
-            "SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->jdme_employyees} ORDER BY created_at LIMIT $per_page OFFSET $offset",
+            "SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->jdme_employyees} $orderClause LIMIT $per_page OFFSET $offset",
             ARRAY_A
         );
-        $this->_column_headers = array( $this->get_columns(),array(),array(),'name');
+        $this->_column_headers = array( $this->get_columns(),array(), $this->get_sortable_columns(),'name');
 
         $this->set_pagination_args([
             'total_items' => $wpdb->get_var("SELECT FOUND_ROWS() "),
