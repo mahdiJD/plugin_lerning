@@ -35,6 +35,27 @@ class Employee_List_Table extends WP_List_Table{
         return '<input type="checkbox" name="employee[]" value="'.$item['ID'].'" />';
     }
 
+    private function create_view( $key,$label, $url, $count = 0){
+        $current_status = isset( $_GET['employee_status']) ? $_GET['employee_status'] : 'all';
+        $view_tag = sprintf( '<a href="%s" %s>%s</a>', $url,$current_status == $key ? 'class="current"' : '' , $label);
+        if( $count ){
+            $view_tag .= sprintf('<span class="count">(%d)</span>' , $count);
+        }
+        return $view_tag;
+    }
+
+    protected function get_views(){
+        global $wpdb;
+        $all = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->jdme_employees}");
+        $has_photo = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->jdme_employees} WHER avatar != '' ");
+        $no_photo = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->jdme_employees} WHER avatar = '' ");
+        return[
+            'all' => $this->create_view('all','همه کارمندان',admin_url('admin.php?page=jdme_employees&employee_status=all', $all)),
+            'has_photo' => $this->create_view('has_photo','عکس دارن ',admin_url('admin.php?page=jdme_employees&employee_status=has_photo', $has_photo )),
+            'no_photo' => $this->create_view('no_photo','عکس ندارن ',admin_url('admin.php?page=jdme_employees&employee_status=no_photo', $no_photo )),
+        ];
+    }
+
     public function get_bulk_actions(){
         return [
             'delete' => 'حذف',
@@ -60,10 +81,11 @@ class Employee_List_Table extends WP_List_Table{
                     <p>$record_count تا با موفقیت حذف شد </p>
                 </div>
             ";
+        
+            wp_redirect(
+                admin_url('admin.php?page=jdme_employees&employee_status=bulk_deleted&deleted_count='.$record_count)
+            );
         }
-        wp_redirect(
-            admin_url('admin.php?page=jdme_employees&employee_status=bulk_deleted&deleted_count='.$record_count)
-        );
     }
     
     public function column_name($item){
@@ -119,8 +141,17 @@ class Employee_List_Table extends WP_List_Table{
             $orderClause = "ORDER BY $orderby $order ";
         }
 
+        $where = 'WHERE 1=1';
+        if (isset( $_GET['employee_status'] ) && $_GET['employee_status'] != 'all') {
+            if ( $_GET['employee_status'] == 'has_photo') {
+                $where .= " AND avatar != '' ";
+            }elseif( $_GET['employee_status'] == 'no_photo'){
+                $where .= " AND avatar  = '' ";
+            }
+        }
+
         $results = $wpdb->get_results(
-            "SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->jdme_employyees} $orderClause LIMIT $per_page OFFSET $offset",
+            "SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->jdme_employyees} $where $orderClause LIMIT $per_page OFFSET $offset",
             ARRAY_A
         );
         $this->_column_headers = array( $this->get_columns(),array(), $this->get_sortable_columns(),'name');

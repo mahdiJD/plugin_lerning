@@ -13,7 +13,7 @@ function jdme_add_menuse(){
         'show_employees'
     );
 
-    add_action('load-'. $list_hook_suffix , 'jdme_proccess_deletion' );
+    // add_action('load-'. $list_hook_suffix , 'jdme_proccess_deletion' );
     add_action('load-'. $list_hook_suffix , 'jdme_proccess_table_data' );
 
     add_submenu_page(
@@ -69,6 +69,7 @@ function jdme_render_form(){
 
 function show_employees(){
     echo '<div class=warp>';
+    $GLOBALS['employee_list_table']->views(); 
         echo '<form method="POST">';
         $GLOBALS['employee_list_table']->display();
         echo '</form>';
