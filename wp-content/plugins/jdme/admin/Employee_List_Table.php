@@ -15,8 +15,8 @@ class Employee_List_Table extends WP_List_Table{
         return [
             'cb' => '<input type="checkbox" />',
             'ID'        => 'شناسه',
-            'name'      => 'نام',
-            'family'    => 'نام خانوادگی',
+            'first_name'      => 'نام',
+            'last_name'    => 'نام خانوادگی',
             'birthdate' => 'تاریخ تولد',
             'avatar'    => 'تصویر',
             'weight'    => 'وزن',
@@ -96,7 +96,7 @@ class Employee_List_Table extends WP_List_Table{
         }
     }
     
-    public function column_name($item){
+    public function column_first_name($item){
 
         $actions = [
             'edit'   => '<a href="' . admin_url('admin.php?page=jdme_employees_create&employee_status=edited&employee_id='.$item['ID']) .'"> ویرایش </a>',
@@ -105,10 +105,6 @@ class Employee_List_Table extends WP_List_Table{
         ];
 
         return $item['first_name'] . $this->row_actions($actions);
-    }
-
-    public function column_family($item){
-        return $item['last_name'];
     }
 
     public function column_date($item){
@@ -127,6 +123,10 @@ class Employee_List_Table extends WP_List_Table{
             'mission' => ['mission', true ],
             'date' => ['date','asc'],
         ];
+    }
+
+    public function get_hidden_columns( ){
+        return get_hidden_columns( get_current_screen() );
     }
 
     public function prepare_items()
@@ -166,7 +166,7 @@ class Employee_List_Table extends WP_List_Table{
             "SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->jdme_employees} $where $orderClause LIMIT $per_page OFFSET $offset",
             ARRAY_A
         );
-        $this->_column_headers = array( $this->get_columns(),array(), $this->get_sortable_columns(),'name');
+        $this->_column_headers = array( $this->get_columns(),$this->get_hidden_columns(), $this->get_sortable_columns(),'name');
 
         $this->set_pagination_args([
             'total_items' => $wpdb->get_var("SELECT FOUND_ROWS() "),
