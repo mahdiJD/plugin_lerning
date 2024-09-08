@@ -13,6 +13,7 @@ class Employee_List_Table extends WP_List_Table{
     public function get_columns()
     {
         return [
+            'cb' => '<input type="checkbox" />',
             'ID'        => 'شناسه',
             'name'      => 'نام',
             'family'    => 'نام خانوادگی',
@@ -30,6 +31,41 @@ class Employee_List_Table extends WP_List_Table{
         return '-';
     }
 
+    public function column_cb($item){
+        return '<input type="checkbox" name="employee[]" value="'.$item['ID'].'" />';
+    }
+
+    public function get_bulk_actions(){
+        return [
+            'delete' => 'حذف',
+            'send_message' => 'ارسال پیام',
+        ];
+    }
+
+    public function process_bulk_actions(){
+        if($this->current_action() == 'delete'){
+            $employees = $_POST['employee'];
+            $record_count = count($employees);
+            global $wpdb;
+            foreach($employees as $employee_id ){
+                $wpdb->delete(
+                    $wpdb->jdme_employess,
+                    [
+                        'ID'    => $employee_id,
+                    ]
+                );
+            }
+            echo "
+                <div class='notice notice-success'>
+                    <p>$record_count تا با موفقیت حذف شد </p>
+                </div>
+            ";
+        }
+        wp_redirect(
+            admin_url('admin.php?page=jdme_employees&employee_status=bulk_deleted&deleted_count='.$record_count)
+        );
+    }
+    
     public function column_name($item){
 
         $actions = [
@@ -66,6 +102,8 @@ class Employee_List_Table extends WP_List_Table{
     public function prepare_items()
     {
         global $wpdb;
+
+        $this->process_bulk_actions();
 
         $per_page = 2;
         $current_page = $this->get_pagenum();

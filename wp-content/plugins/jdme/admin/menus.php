@@ -14,6 +14,7 @@ function jdme_add_menuse(){
     );
 
     add_action('load-'. $list_hook_suffix , 'jdme_proccess_deletion' );
+    add_action('load-'. $list_hook_suffix , 'jdme_proccess_table_data' );
 
     add_submenu_page(
         'jdme_employees',
@@ -23,6 +24,12 @@ function jdme_add_menuse(){
         'jdme_employees_create',
         'jdme_render_form'
     );
+}
+
+function jdme_proccess_table_data(){
+    require(JDME_ADMIN . 'Employee_List_Table.php');
+    $GLOBALS['employee_list_table'] = new Employee_List_Table();
+    $GLOBALS['employee_list_table']->prepare_items();
 }
 
 function jdme_proccess_deletion(){
@@ -61,10 +68,11 @@ function jdme_render_form(){
 }
 
 function show_employees(){
-    require(JDME_ADMIN . 'Employee_List_Table.php');
-    $employeeListTable = new Employee_List_Table();
-    $employeeListTable->prepare_items();
-    $employeeListTable->display();
+    echo '<div class=warp>';
+        echo '<form method="POST">';
+        $GLOBALS['employee_list_table']->display();
+        echo '</form>';
+    echo '</div>';
     return;
 
     global $wpdb;
@@ -177,7 +185,10 @@ function jdme_notices(){
         }elseif($status == 'deleted'){
             $message = 'حذف شد';
             $type    = 'success'; 
-        }
+        }elseif($status == 'bulk_deleted'){
+            $message = $_POST['deleted_count'] . 'حذف شد';
+            $type    = 'success'; 
+        }   
     }
     if ($type && $message) {
         ?>
