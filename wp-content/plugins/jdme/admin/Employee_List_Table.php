@@ -46,9 +46,17 @@ class Employee_List_Table extends WP_List_Table{
 
     protected function get_views(){
         global $wpdb;
-        $all = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->jdme_employees}");
-        $has_photo = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->jdme_employees} WHER avatar != '' ");
-        $no_photo = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->jdme_employees} WHER avatar = '' ");
+
+        $where = '';
+        if (isset( $_GET['s'])) {
+            $where = $wpdb->prepare(" AND last_name LIKE %s", '%' . $wpdb->esc_like( $_GET['s'] ) . '%');
+        }
+
+        $all = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->jdme_employees} WHERE 1=1 $where ");
+        $has_photo = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->jdme_employees} WHERE avatar != '' $where ");
+        $no_photo = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->jdme_employees} WHERE avatar = '' $where ");
+        // echo " [{ $wpdb->jdme_employees }]";
+        // print_r($no_photo);exit;
         return[
             'all' => $this->create_view('all','همه کارمندان',admin_url('admin.php?page=jdme_employees&employee_status=all', $all)),
             'has_photo' => $this->create_view('has_photo','عکس دارن ',admin_url('admin.php?page=jdme_employees&employee_status=has_photo', $has_photo )),
@@ -150,8 +158,12 @@ class Employee_List_Table extends WP_List_Table{
             }
         }
 
+        if (isset( $_GET['s'])) {
+            $where .= $wpdb->prepare(" AND last_name LIKE %s", '%' . $wpdb->esc_like( $_GET['s'] ) . '%');
+        }
+
         $results = $wpdb->get_results(
-            "SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->jdme_employyees} $where $orderClause LIMIT $per_page OFFSET $offset",
+            "SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->jdme_employees} $where $orderClause LIMIT $per_page OFFSET $offset",
             ARRAY_A
         );
         $this->_column_headers = array( $this->get_columns(),array(), $this->get_sortable_columns(),'name');

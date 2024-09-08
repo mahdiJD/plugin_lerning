@@ -36,9 +36,9 @@ function jdme_proccess_deletion(){
     if( isset($_GET['action']) && $_GET['action'] == 'delete_employee' && isset($_GET['id']) ){
         $employee_id = absint($_GET['id']);
         global $wpdb;
-        $table_name = $wpdb->prefix .'jdme_employees';
+        $jdme_employees = $wpdb->prefix .'jdme_employees';
         $deleted = $wpdb->delete(
-            $table_name,
+            $jdme_employees,
             [
                 'ID' => $employee_id
             ]
@@ -54,13 +54,13 @@ function jdme_proccess_deletion(){
 function jdme_render_form(){
 
     global $wpdb;
-    $table_name = $wpdb->prefix .'jdme_employees';
+    $jdme_employees = $wpdb->prefix .'jdme_employees';
     $employees = false;
     if( isset($_GET['employee_id'] ) ){
         $employee_id = absint($_GET['employee_id']);
         if($employee_id){
             $employees = $wpdb->get_row(
-                "SELECT * FROM $table_name WHERE ID = $employee_id"
+                "SELECT * FROM $jdme_employees WHERE ID = $employee_id"
             );
         }
     }
@@ -68,26 +68,6 @@ function jdme_render_form(){
 }
 
 function show_employees(){
-    echo '<div class=warp>';
-    $GLOBALS['employee_list_table']->views(); 
-        echo '<form method="POST">';
-        $GLOBALS['employee_list_table']->display();
-        echo '</form>';
-    echo '</div>';
-    return;
-
-    global $wpdb;
-    $table_name = $wpdb->prefix .'jdme_employees';
-    $page = isset($_GET['pagenum'] ) ? absint($_GET['pagenum'] ) : 1;
-    $per_page =2 ;
-    $limit = $per_page;
-    $offset = ($page - 1) * $per_page;
-    $employees = $wpdb->get_results(
-        "SELECT SQL_CALC_FOUND_ROWS * FROM $table_name ORDER BY created_at DESC LIMIT $limit OFFSET $offset"
-    );
-
-    $found_rows = $wpdb->get_var( "SELECT FOUND_ROWS()" );
-    $total_pages = ceil( $found_rows / $per_page );
 
     include(JDME_VIEW.'list_employees.php');
 }
@@ -111,11 +91,11 @@ function jdme_form_submit(){
             ];
 
             global $wpdb;
-            $table_name = $wpdb->prefix .'jdme_employees';
+            $jdme_employees = $wpdb->prefix .'jdme_employees';
 
             if($employee_id){
                 $update_row = $wpdb->update(
-                    $table_name,
+                    $jdme_employees,
                     $data,
                     [ 'ID' => $employee_id ],
                     [
@@ -138,7 +118,7 @@ function jdme_form_submit(){
             $data['created_at'] = current_time('mysql');
             
             $inserted = $wpdb->insert(
-                $table_name,
+                $jdme_employees,
                 $data,
                 [
                     '%s','%s','%s','%s','%d','%f','%s'

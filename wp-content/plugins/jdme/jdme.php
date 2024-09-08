@@ -9,7 +9,7 @@ define('JDME_VIEW', plugin_dir_path(__FILE__).'views/');
 define('JDME_IMAGE', plugin_dir_path(__FILE__).'assets/images/');
 
 global $wpdb;
-$wpdb->jdme_employyees = $wpdb->prefix . 'jdme_employees';
+$wpdb->jdme_employees = $wpdb->prefix . 'jdme_employees';
 
 if(is_admin()){
     include(JDME_ADMIN.'menus.php');
@@ -18,9 +18,9 @@ if(is_admin()){
 register_activation_hook(__FILE__,'jdme_install');
 function jdme_install(){
     global $wpdb;
-    $table_name = $wpdb->prefix .'jdme_employees';
+    $jdme_employees = $wpdb->prefix .'jdme_employees';
     $table_collation = $wpdb->collate;
-    $sql = "CREATE TABLE $table_name ( 
+    $sql = "CREATE TABLE $jdme_employees ( 
                 `ID` bigint unsigned NOT NULL AUTO_INCREMENT,
                 `first_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
                 `last_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
