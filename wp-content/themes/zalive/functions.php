@@ -1,4 +1,8 @@
 <?php 
+
+  add_action('after_setup_theme',function(){
+    remove_theme_support('widgets-block-editor');
+  });
   $zAlive_options = zAlive_getThemeOptions();
 
   //setup theme
