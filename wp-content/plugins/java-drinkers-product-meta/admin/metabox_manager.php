@@ -13,6 +13,33 @@ function jdpm_add_metabox(){
         //     'name' => 'mahdi',
         // ]
     );
+
+    add_meta_box(
+        'jdpm_comment_meta',
+        'اطلاعات دیدگاه',
+        'jdpm_comment_callback',
+        'comment',
+        'normal',
+    );
+}
+
+function jdpm_comment_callback($comment){
+    $score = get_comment_meta( $comment->comment_ID, 'jdpm_score', true);
+    $special = get_comment_meta( $comment->comment_ID, 'jdpm_special', true);
+    include JDMB_VIEW . 'comment_meta.php' ;
+}
+
+add_action( 'edit_comment','jdpm_save_comment_metabox',10 ,2);
+function jdpm_save_comment_metabox($comment_id, $comment_data){
+    $score = absint( $_POST['jdpm_score']);
+
+    if(isset($_POST['jdpm_special'])){
+        update_comment_meta($comment_id, 'jdpm_special', 1);
+    }else{
+        delete_comment_meta($comment_id, 'jdpm_special', 1);
+    }
+
+    update_comment_meta( $comment_id , 'jdpm_score', $score);
 }
 
 add_action( 'save_post','jdpm_save_metabox',10 ,3);
