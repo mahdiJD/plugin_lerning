@@ -2,16 +2,14 @@
 add_action('add_meta_boxes', 'jdpm_add_metabox' );
 function jdpm_add_metabox(){
 
+    // print_r(get_current_screen());
     add_meta_box(
         'jdpm_product_metaa',
         'اطلاعات محصول',
         'jdpm_metabox_callback', //end
-        'post',
+        ['post' , 'page', 'attachment'],
         'normal',
         'core',
-        // [
-        //     'name' => 'mahdi',
-        // ]
     );
 
     add_meta_box(
@@ -43,7 +41,18 @@ function jdpm_save_comment_metabox($comment_id, $comment_data){
 }
 
 add_action( 'save_post','jdpm_save_metabox',10 ,3);
-function jdpm_save_metabox( $post_id , $post , $update ){
+add_action( 'edit_attachment','jdpm_save_metabox',10 ,3);
+function jdpm_save_metabox( $post_id , $post  , $update ){
+
+    $post_type = get_post_type();
+
+    if ( ! in_array($post_type, ['post','attachment']) ||
+         ! isset( $_POST['jdpm_price']) ||
+         wp_doing_ajax()
+         ) {
+        return;
+    }
+
     $price      = absint( $_POST['jdpm_price']);
     $sale_price = absint( $_POST['jdpm_sale_price']);
 
