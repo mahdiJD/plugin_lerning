@@ -6,8 +6,8 @@ add_action('admin_menu','jdme_add_menuse');
 function jdme_add_menuse(){
 
     $list_hook_suffix = add_menu_page(
-        'کارمندان',
-        'کارمندان',
+        __( 'Employees', 'jdme'),
+        __( 'Employees', 'jdme'),
         'manage_options',
         'jdme_employees',
         'show_employees'
@@ -18,8 +18,8 @@ function jdme_add_menuse(){
 
     add_submenu_page(
         'jdme_employees',
-        'ایجاد کارمندان',
-        'ایجاد کارمندان',
+        __('Create Employees', 'jdme'),
+        __('Create Employees', 'jdme'),
         'manage_options',
         'jdme_employees_create',
         'jdme_render_form'
@@ -148,26 +148,26 @@ function jdme_notices(){
     if (isset($_GET['employee_status'])) {
         $status = sanitize_text_field( $_GET['employee_status'] );
         if($status == 'inserted'){
-            $message = 'کارمند با موفقیت ثبت شد';
+            $message = 'employee added successfully';
             $type    = 'success'; 
         }elseif($status == 'inserted_error'){
-            $message = 'ثبت با خطا مواجه شد';
+            $message = 'employee added error';
             $type    = 'error'; 
         }elseif($status == 'edited'){
-            $message = 'کارمند ویرایش شد';
+            $message = 'employee edit successfully';
             $type    = 'success'; 
         }
         elseif($status == 'edited_error'){
-            $message = 'ویرایش با خطا مواجه شد';
+            $message = 'employee edit error';
             $type    = 'error'; 
         }elseif($status == 'deleted_error'){
-            $message = 'حذف با خطا مواجه شد';
+            $message = 'employee deleted error';
             $type    = 'error'; 
         }elseif($status == 'deleted'){
-            $message = 'حذف شد';
+            $message = 'employee deleted successfully';
             $type    = 'success'; 
         }elseif($status == 'bulk_deleted'){
-            $message = $_POST['deleted_count'] . 'حذف شد';
+            $message = $_POST['deleted_count'] . 'deleted';
             $type    = 'success'; 
         }   
     }

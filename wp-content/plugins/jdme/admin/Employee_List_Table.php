@@ -14,14 +14,14 @@ class Employee_List_Table extends WP_List_Table{
     {
         return [
             'cb' => '<input type="checkbox" />',
-            'ID'        => 'شناسه',
-            'first_name'      => 'نام',
-            'last_name'    => 'نام خانوادگی',
-            'birthdate' => 'تاریخ تولد',
-            'avatar'    => 'تصویر',
-            'weight'    => 'وزن',
-            'mission'   => 'ماموریت',
-            'date'      => 'تاریخ ثبت',
+            'ID'        => __( 'id' , 'jdme' ),
+            'first_name'=> __( 'name' , 'jdme' ),
+            'last_name' => __( 'family' , 'jdme' ),
+            'birthdate' => __( 'date of birthdate' , 'jdme' ),
+            'avatar'    => __( 'photo' , 'jdme' ),
+            'weight'    => __( 'weight' , 'jdme' ),
+            'mission'   => __( 'mission' , 'jdme' ),
+            'date'      => __( 'created at' , 'jdme' ),
         ];
     }
 
@@ -59,15 +59,15 @@ class Employee_List_Table extends WP_List_Table{
         // print_r($no_photo);exit;
         return[
             'all' => $this->create_view('all','همه کارمندان',admin_url('admin.php?page=jdme_employees&employee_status=all', $all)),
-            'has_photo' => $this->create_view('has_photo','عکس دارن ',admin_url('admin.php?page=jdme_employees&employee_status=has_photo', $has_photo )),
-            'no_photo' => $this->create_view('no_photo','عکس ندارن ',admin_url('admin.php?page=jdme_employees&employee_status=no_photo', $no_photo )),
+            'has_photo' => $this->create_view('has_photo','has photo',admin_url('admin.php?page=jdme_employees&employee_status=has_photo', $has_photo )),
+            'no_photo' => $this->create_view('no_photo','dont photo',admin_url('admin.php?page=jdme_employees&employee_status=no_photo', $no_photo )),
         ];
     }
 
     public function get_bulk_actions(){
         return [
-            'delete' => 'حذف',
-            'send_message' => 'ارسال پیام',
+            'delete' => 'delete',
+            'send_message' => 'send message',
         ];
     }
 
@@ -86,7 +86,7 @@ class Employee_List_Table extends WP_List_Table{
             }
             echo "
                 <div class='notice notice-success'>
-                    <p>$record_count تا با موفقیت حذف شد </p>
+                    <p>$record_count deleted successfully</p>
                 </div>
             ";
         
@@ -99,8 +99,8 @@ class Employee_List_Table extends WP_List_Table{
     public function column_first_name($item){
 
         $actions = [
-            'edit'   => '<a href="' . admin_url('admin.php?page=jdme_employees_create&employee_status=edited&employee_id='.$item['ID']) .'"> ویرایش </a>',
-            'delete' => '<a href="' . admin_url('admin.php?page=jdme_employees&action=delete_employee&id='.$item['ID']) .'"> حذف </a>',
+            'edit'   => '<a href="' . admin_url('admin.php?page=jdme_employees_create&employee_status=edited&employee_id='.$item['ID']) .'"> edit </a>',
+            'delete' => '<a href="' . admin_url('admin.php?page=jdme_employees&action=delete_employee&id='.$item['ID']) .'"> delete </a>',
 
         ];
 

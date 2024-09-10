@@ -1,12 +1,21 @@
 <?php
 /**
  * Plugin name: manage employees
+ * Plugin URI: https://www.daneshjooyar.com/
+ * Description: This plugins is for manage employees
+ * Auther: Mahdi Bijari
+ * Text Domain: jdme
+ * Domain Path: /languages
 **/
 defined('ABSPATH') || exit;
 
 define('JDME_ADMIN', plugin_dir_path(__FILE__).'admin/');
 define('JDME_VIEW', plugin_dir_path(__FILE__).'views/');
 define('JDME_IMAGE', plugin_dir_path(__FILE__).'assets/images/');
+
+add_action('plugin_loaded', function(){
+    load_plugin_textdomain('jdme', false, dirname( plugin_basename( __FILE__ ) ).'/languages');
+});
 
 global $wpdb;
 $wpdb->jdme_employees = $wpdb->prefix . 'jdme_employees';
