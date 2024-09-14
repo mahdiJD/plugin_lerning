@@ -68,6 +68,27 @@ if($employees){
                 <input type="number" name="weight" step="0.1" id="weight" value="<?php echo esc_attr($employees->weight); ?>"></input>
             </td>
         </tr>
+        
+        <tr>
+            <th scope="row">
+                <label for="phone">phone</label>
+            </th>
+            <td>
+                <input type="tel" name="phone" pattern="[0-9]{11}" id="phone" value=""></input>
+            </td>
+        </tr>
+
+        <tr>
+            <th scope="row">
+                <label for="gender">gender</label>
+            </th>
+            <td>
+                <select name="gender" id="gender">
+                    <option value="meal">Meal</option>
+                    <option value="femeal">Femeal</option>
+                </select>
+            </td>
+        </tr>
 
         <tr>
             <th scope="row">

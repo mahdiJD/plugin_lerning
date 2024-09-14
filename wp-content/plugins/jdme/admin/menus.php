@@ -93,6 +93,34 @@ function jdme_form_submit(){
             if ( ! check_admin_referer( 'edit_employee' . $employee_id) ) {
                 wp_die('send data from form');
             }
+
+            $gender = $_POST['gender'];
+            if ($gender == 'male' || $gender == 'female') // in_array($gender, [male  , female])
+            {
+                //creact
+            }else{
+                wp_die('Gender is not valid');
+            }
+            //save gender
+            $phone = $_POST['phone'];
+            if ( ! preg_match( "/^[0-9]{11}$/" , $phone )) // in_array($gender, [male  , female])
+            {
+                wp_die( 'phone is invalid');
+            }else{
+                // valide
+            }
+
+            $email = $_POST['email'];
+            if (! is_email( $email ) ) {
+                wp_die('email is invalid');
+            }else{
+                if (! email_exists( $email ) ) {
+                    wp_die('email is exists');
+                }else{
+                    //valid
+                }
+            }
+
             $data = [
                 'first_name' => sanitize_text_field($_POST['first_name']),
                 'last_name'  => sanitize_text_field($_POST['lastـname']),
