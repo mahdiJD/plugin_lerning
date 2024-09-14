@@ -13,6 +13,7 @@ jQuery(document).ready(function($){
                 action : 'jdpl_like',
                 post_id: $(this).data('id'),
                 like: ! $(this).hasClass('post-liked'),
+                _wpnonce: $(this).data('nonce')
             },
             beforeSend: function(){
                 $(btn).addClass('loding');

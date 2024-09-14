@@ -98,9 +98,11 @@ class Employee_List_Table extends WP_List_Table{
     
     public function column_first_name($item){
 
+        $csrf = wp_create_nonce( 'delete_employee' . $item['ID']);
+
         $actions = [
             'edit'   => '<a href="' . admin_url('admin.php?page=jdme_employees_create&employee_status=edited&employee_id='.$item['ID']) .'"> edit </a>',
-            'delete' => '<a href="' . admin_url('admin.php?page=jdme_employees&action=delete_employee&id='.$item['ID']) .'"> delete </a>',
+            'delete' => '<a href="' . admin_url('admin.php?page=jdme_employees&action=delete_employee&id='.$item['ID']) . '&csrf=' . $csrf .'"> delete </a>',
 
         ];
 

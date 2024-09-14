@@ -35,6 +35,11 @@ function jdme_proccess_table_data(){
 function jdme_proccess_deletion(){
     if( isset($_GET['action']) && $_GET['action'] == 'delete_employee' && isset($_GET['id']) ){
         $employee_id = absint($_GET['id']);
+
+        if ( !isset( $_GET['scrf'] ) && wp_verify_nonce( $_GET['csrf'], 'delete_employee')) {
+            wp_die('csrf is not valid');
+        }
+
         global $wpdb;
         $jdme_employees = $wpdb->prefix .'jdme_employees';
         $deleted = $wpdb->delete(
@@ -81,6 +86,13 @@ function jdme_form_submit(){
             // print_r($_POST);exit;
 
             $employee_id = $_POST['ID'];
+            if ( ! isset( $_POST['_wpnonce'] ) && ! wp_verify_nonce( $_POST['_wpnonce'], 'edit_employee' . $employee_id) ) {
+                wp_die('nonce invalid');
+            }
+            
+            if ( ! check_admin_referer( 'edit_employee' . $employee_id) ) {
+                wp_die('send data from form');
+            }
             $data = [
                 'first_name' => sanitize_text_field($_POST['first_name']),
                 'last_name'  => sanitize_text_field($_POST['lastـname']),

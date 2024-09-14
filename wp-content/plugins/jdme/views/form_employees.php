@@ -91,6 +91,7 @@ if($employees){
     </table>
     <p class="submit">
         <input type="hidden" name="ID"  value="<?php echo esc_attr($employees->ID); ?>">
+        <?php wp_nonce_field('edit_employee' . $ID); ?>
         <button class="button button-primary" name="save_employee" value="1"><?php echo $employees ? 'edit' : 'save' ?></button>
     </p>
 </form>

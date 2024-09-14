@@ -122,9 +122,10 @@ function jdpl_button($content){
     $like_count = jdpl_get_post_like($post_id);
     $liked_class = // is_user_logged_in() &&
      jdpl_is_liked($post_id ,get_current_user_id()) ? 'post-liked' : '';
+    $nonce = wp_create_nonce( 'post-like' . $post_id);
     $button = "
     <br> 
-    <button class='like-post $liked_class' type='button' data-id='$post_id'>
+    <button class='like-post $liked_class' type='button' data-id='$post_id' data-nonce='$nonce'>
     <svg width='16' height='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><style>.spinner_S1WN{animation:spinner_MGfb .8s linear infinite;animation-delay:-.8s}.spinner_Km9P{animation-delay:-.65s}.spinner_JApP{animation-delay:-.5s}@keyframes spinner_MGfb{93.75%,100%{opacity:.2}}</style><circle class='spinner_S1WN' cx='4' cy='12' r='3'/><circle class='spinner_S1WN spinner_Km9P' cx='12' cy='12' r='3'/><circle class='spinner_S1WN spinner_JApP' cx='20' cy='12' r='3'/></svg>
 
     Like Post
@@ -148,6 +149,14 @@ function jdpl_ajax_callback(){
     $post_id = absint( $_POST['post_id']); //$_REQUEST
     $user_id = get_current_user_id();
     $like = $_POST['like'] == 'true' ? true : false;
+
+    if( !isset( $_POST['_wpnonce'] ) || !wp_verify_nonce( $_POST['_wpnonce'], 'post-like' . $post_id) ){
+        wp_send_json_error([
+            'message' => 'error, nonce is invalid',
+            'code' =>  '403',
+        ]);
+    }
+
     $liked = jdpl_like( $post_id, $user_id, $like);
 
     if ($liked) {
