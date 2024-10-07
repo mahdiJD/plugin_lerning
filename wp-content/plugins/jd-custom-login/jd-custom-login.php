@@ -9,7 +9,7 @@ defined('ABSPATH') || exit;
 define('JD_CUSTOM_LOGIN_VER','1.0.0');
 define('JD_CUSTOM_LOGIN_ASSETS', plugin_dir_url(__FILE__). 'assets/');
 define('JD_CUSTOM_LOGIN_CSS', JD_CUSTOM_LOGIN_ASSETS . 'css/');
-define('JD_CUSTOM_LOGIN_JS', JD_CUSTOM_LOGIN_ASSETS , 'js/');
+define('JD_CUSTOM_LOGIN_JS', JD_CUSTOM_LOGIN_ASSETS . 'js/');
 define('JD_CUSTOM_LOGIN_IMAGES', JD_CUSTOM_LOGIN_ASSETS . 'images/');
 
 add_action( 'login_enqueue_scripts', function(){
